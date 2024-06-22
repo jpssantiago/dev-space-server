@@ -40,7 +40,45 @@ export async function getAllPosts() {
 
 export async function getPostById(postId: string) {
     try {
-        return await prisma.post.findUnique({ where: { id: postId } })
+        return await prisma.post.findUnique({ 
+            where: { id: postId },
+            include: {
+                ...defaultInclude,
+                likes: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                },
+                replies: {
+                    include: {
+                        author: {
+                            select: {
+                                id: true,
+                                username: true,
+                                name: true,
+                                avatar: true,
+                                followers: true,
+                                following: true
+                            }
+                        },
+                        likes: {
+                            select: {
+                                user: {
+                                    select: {
+                                        id: true
+                                    }
+                                }
+                            }
+                        },
+                        replies: true
+                    }
+                }
+            }
+        })
     } catch {}
 }
 
@@ -65,6 +103,28 @@ export async function addReply(authorId: string, postId: string, text?: string, 
                 files,
                 authorId,
                 parentPostId: postId
+            },
+            include: {
+                author: {
+                    select: {
+                        id: true,
+                        username: true,
+                        name: true,
+                        avatar: true,
+                        followers: true,
+                        following: true
+                    }
+                },
+                likes: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                },
+                replies: true
             }
         })
     } catch {}
