@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import * as TokenService from "../../services/token-service"
 import * as PostService from "../../services/post-service"
+import * as CloudflareService from "../../services/cloudflare-service"
 
 const headersSchema = z.object({
     authorization: z.string()
@@ -11,6 +12,8 @@ const headersSchema = z.object({
 const paramsSchema = z.object({
     postId: z.string().cuid()
 })
+
+const BASE_URL = "https://bucket.devspace.joaosantiago.com.br/"
 
 export async function deletePost(request: FastifyRequest, reply: FastifyReply) {
     const { data: headers } = headersSchema.safeParse(request.headers)
@@ -36,6 +39,18 @@ export async function deletePost(request: FastifyRequest, reply: FastifyReply) {
 
     if (post.authorId != id) {
         return reply.send({ err: "unauthorized" })
+    }
+
+    const filesToDelete: string[] = [...post.files]
+
+    const replies = await PostService.getAllPostReplies(post.id)
+    replies?.map(reply => {
+        filesToDelete.push(...reply.files)
+    })
+
+    for (let file of filesToDelete) {
+        const key = file.split(BASE_URL)[1]
+        await CloudflareService.deleteImageFromBucket(key)
     }
 
     const deleted = await PostService.deletePost(post.id)

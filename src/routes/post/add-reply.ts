@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import * as TokenService from "../../services/token-service"
 import * as PostService from "../../services/post-service"
+import * as CloudflareService from "../../services/cloudflare-service"
 
 const headersSchema = z.object({
     authorization: z.string()
@@ -14,8 +15,10 @@ const paramsSchema = z.object({
 
 const bodySchema = z.object({
     text: z.string().min(1).max(2200).nullable(),
-    files: z.string().array().nullable()
+    files: z.string().array()
 })
+
+const BASE_URL = "https://bucket.devspace.joaosantiago.com.br"
 
 export async function addReply(request: FastifyRequest, response: FastifyReply) {
     const { data: headers } = headersSchema.safeParse(request.headers)
@@ -35,6 +38,12 @@ export async function addReply(request: FastifyRequest, response: FastifyReply) 
         return response.send({ err: "unauthorized" })
     }
 
-    const reply = await PostService.addReply(id, params.postId, body.text ?? undefined, body.files ?? [])
+    const files: string[] = []
+    for (let file of body.files) {
+        const key = await CloudflareService.uploadImageToBucket(id, file)
+        files.push(`${BASE_URL}/${key}`)
+    }
+
+    const reply = await PostService.addReply(id, params.postId, body.text ?? undefined, files)
     response.send({ reply })
 }

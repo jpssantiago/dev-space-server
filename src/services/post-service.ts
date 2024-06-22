@@ -1,23 +1,25 @@
 import { prisma } from "./prisma-service"
 
+const defaultInclude = {
+    author: {
+        select: {
+            id: true,
+            username: true,
+            name: true,
+            avatar: true,
+            followers: true,
+            following: true
+        },
+    },
+    likes: true,
+    replies: true,
+}
+
 export async function getAllPosts() {
     try {
         return await prisma.post.findMany({
             where: { parentPost: null },
-            include: {
-                author: {
-                    select: {
-                        id: true,
-                        username: true,
-                        name: true,
-                        avatar: true,
-                        followers: true,
-                        following: true
-                    },
-                },
-                likes: true,
-                replies: true,
-            },
+            include: defaultInclude,
             orderBy: {
                 createdAt: "desc"
             },
@@ -38,7 +40,8 @@ export async function addPost(authorId: string, text?: string, files?: string[])
                 authorId,
                 text,
                 files
-            }
+            },
+            include: defaultInclude,
         })
     } catch {}
 }
@@ -53,6 +56,12 @@ export async function addReply(authorId: string, postId: string, text?: string, 
                 parentPostId: postId
             }
         })
+    } catch {}
+}
+
+export async function getAllPostReplies(postId: string) {
+    try {
+        return await prisma.post.findMany({ where: { parentPostId: postId } })
     } catch {}
 }
 

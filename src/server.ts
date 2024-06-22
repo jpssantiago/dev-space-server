@@ -4,7 +4,8 @@ import "dotenv/config"
 
 import { env } from "./env/env"
 
-const app = fastify()
+const app = fastify({ bodyLimit: 5000000 })
+
 app.register(cors, {})
 app.register(import("./routes/auth/auth"))
 app.register(import("./routes/user/user"))
