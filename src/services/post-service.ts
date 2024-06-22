@@ -19,7 +19,18 @@ export async function getAllPosts() {
     try {
         return await prisma.post.findMany({
             where: { parentPost: null },
-            include: defaultInclude,
+            include: {
+                ...defaultInclude,
+                likes: {
+                    select: {
+                        user: {
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                }
+            },
             orderBy: {
                 createdAt: "desc"
             },
