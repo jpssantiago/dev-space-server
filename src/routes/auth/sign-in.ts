@@ -1,14 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
-import { usernameSchema, passwordSchema } from "../../schemas/auth-schemas"
+import { emailOrUsernameSchema, passwordSchema } from "../../schemas/auth-schemas"
 import * as UserService from "../../services/user-service"
 import * as HashService from "../../services/hash-service"
 import * as TokenService from "../../services/token-service"
 import { omit } from "../../lib/utils"
 
 const bodySchema = z.object({
-    username: usernameSchema,
+    emailOrUsername: emailOrUsernameSchema,
     password: passwordSchema
 })
 
@@ -18,7 +18,7 @@ export async function signIn(request: FastifyRequest, reply: FastifyReply) {
         return reply.send({ err: "bad-request" })
     }
 
-    const user = await UserService.getUserByUsername(body.username)
+    const user = await UserService.getUserByEmailOrUsername(body.emailOrUsername)
     if (!user) {
         return reply.send({ err: "user-not-found" })
     }

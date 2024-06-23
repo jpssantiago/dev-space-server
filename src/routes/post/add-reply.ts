@@ -33,6 +33,10 @@ export async function addReply(request: FastifyRequest, response: FastifyReply) 
     }
 
     const token = headers.authorization.split(" ")[1]
+    if (token == "undefined") {
+        return response.send({ err: "no-token" })
+    }
+
     const id = TokenService.validateToken(token)
     if (!id) {
         return response.send({ err: "unauthorized" })

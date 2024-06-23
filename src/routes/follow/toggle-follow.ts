@@ -24,6 +24,10 @@ export async function toggleFollow(request: FastifyRequest, reply: FastifyReply)
     }
 
     const token = headers.authorization.split(" ")[1]
+    if (token == "undefined") {
+        return reply.send({ err: "no-token" })
+    }
+    
     const id = TokenService.validateToken(token)
     if (!id) {
         return reply.send({ err: "unauthorized" })

@@ -35,12 +35,12 @@ export async function getAllPosts() {
                 createdAt: "desc"
             },
         })
-    } catch {}
+    } catch { }
 }
 
 export async function getPostById(postId: string) {
     try {
-        return await prisma.post.findUnique({ 
+        return await prisma.post.findUnique({
             where: { id: postId },
             include: {
                 ...defaultInclude,
@@ -74,12 +74,35 @@ export async function getPostById(postId: string) {
                                 }
                             }
                         },
-                        replies: true
+                        replies: {
+                            include: {
+                                author: {
+                                    select: {
+                                        id: true,
+                                        username: true,
+                                        name: true,
+                                        avatar: true,
+                                        followers: true,
+                                        following: true
+                                    }
+                                },
+                                likes: {
+                                    select: {
+                                        user: {
+                                            select: {
+                                                id: true
+                                            }
+                                        }
+                                    }
+                                },
+                                replies: true
+                            }
+                        }
                     }
                 }
             }
         })
-    } catch {}
+    } catch { }
 }
 
 export async function addPost(authorId: string, text?: string, files?: string[]) {
@@ -92,7 +115,7 @@ export async function addPost(authorId: string, text?: string, files?: string[])
             },
             include: defaultInclude,
         })
-    } catch {}
+    } catch { }
 }
 
 export async function addReply(authorId: string, postId: string, text?: string, files?: string[]) {
@@ -127,17 +150,17 @@ export async function addReply(authorId: string, postId: string, text?: string, 
                 replies: true
             }
         })
-    } catch {}
+    } catch { }
 }
 
 export async function getAllPostReplies(postId: string) {
     try {
         return await prisma.post.findMany({ where: { parentPostId: postId } })
-    } catch {}
+    } catch { }
 }
 
 export async function deletePost(postId: string) {
     try {
         return await prisma.post.delete({ where: { id: postId } })
-    } catch {}
+    } catch { }
 }

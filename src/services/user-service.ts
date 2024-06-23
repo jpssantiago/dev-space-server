@@ -1,9 +1,11 @@
 import { prisma } from "./prisma-service"
 
-export async function getUserByUsername(username: string) {
+export async function getUserByEmailOrUsername(emailOrUsername: string) {
     try {
+        const where = emailOrUsername.includes("@") ? { email: emailOrUsername } : { username: emailOrUsername }
+
         return await prisma.user.findUnique({ 
-            where: { username },
+            where: where,
         })
     } catch {}
 }
