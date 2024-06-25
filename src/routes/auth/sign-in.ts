@@ -29,5 +29,5 @@ export async function signIn(request: FastifyRequest, reply: FastifyReply) {
     }
 
     const token = TokenService.createToken(user.id)
-    reply.send({ token, user: omit(user, ["password"]) })
+    reply.send({ token })
 }

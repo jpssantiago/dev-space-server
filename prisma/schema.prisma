@@ -14,58 +14,65 @@ datasource db {
 }
 
 model User {
-  id          String  @id @default(cuid())
-  username    String  @unique
-  email       String  @unique
+  id          String   @id @default(cuid())
+  username    String   @unique
+  email       String   @unique
   password    String
   name        String
   avatar      String?
   description String?
+  createdAt   DateTime @default(now())
 
   posts Post[]
+
   likes Like[]
+
   following Follow[] @relation("following")
   followers Follow[] @relation("followed")
+
   sentNotifications Notification[] @relation("sender")
-  notifications Notification[] @relation("receiver")
+  notifications     Notification[] @relation("receiver")
+
+  chats Chat[]
+  sentMessages Message[]
 }
 
 model Post {
-  id String @id @default(cuid())
-  text String? @db.VarChar(2200)
-  files String[]
+  id        String   @id @default(cuid())
+  text      String?  @db.VarChar(2200)
+  files     String[]
   createdAt DateTime @default(now())
 
-  author User @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id])
   authorId String
 
-  likes Like[]
+  likes         Like[]
   notifications Notification[]
 
-  parentPost Post? @relation("parentPost", fields: [parentPostId], references: [id], onDelete: Cascade)
+  parentPost   Post?   @relation("parentPost", fields: [parentPostId], references: [id], onDelete: Cascade)
   parentPostId String?
-  replies Post[] @relation("parentPost")
+  replies      Post[]  @relation("parentPost")
 }
 
 model Like {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
 }
 
 model Follow {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
 
-  following User @relation("following", fields: [followingId], references: [id])
+  following   User   @relation("following", fields: [followingId], references: [id])
   followingId String
 
-  followed User @relation("followed", fields: [followedId], references: [id])
+  followed   User   @relation("followed", fields: [followedId], references: [id])
   followedId String
 }
 
@@ -77,16 +84,38 @@ enum NotificationType {
 }
 
 model Notification {
-  id String @id @default(cuid())
-  type NotificationType
-  createdAt DateTime @default(now())
+  id        String           @id @default(cuid())
+  type      NotificationType
+  createdAt DateTime         @default(now())
 
-  sender User? @relation("sender", fields: [senderId], references: [id])
+  sender   User?   @relation("sender", fields: [senderId], references: [id])
   senderId String?
 
-  receiver User? @relation("receiver", fields: [receiverId], references: [id])
+  receiver   User?   @relation("receiver", fields: [receiverId], references: [id])
   receiverId String?
 
-  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
+}
+
+model Chat {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  users User[]
+
+  messages Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  text      String?
+  file      String?
+  createdAt DateTime @default(now())
+
+  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId String
+
+  sender   User   @relation(fields: [senderId], references: [id])
+  senderId String
 }

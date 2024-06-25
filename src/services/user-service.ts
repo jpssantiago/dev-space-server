@@ -46,6 +46,30 @@ export async function getUserById(id: string) {
                             }
                         }
                     }
+                },
+                chats: {
+                    include: {
+                        users: {
+                            select: {
+                                id: true,
+                                username: true,
+                                name: true,
+                                avatar: true
+                            }
+                        },
+                        messages: {
+                            include: {
+                                sender: {
+                                    select: {
+                                        id: true,
+                                        username: true,
+                                        name: true,
+                                        avatar: true
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             },
         })

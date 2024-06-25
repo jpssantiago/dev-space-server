@@ -31,7 +31,7 @@ export async function loadUser(request: FastifyRequest, reply: FastifyReply) {
     }
 
     reply.send({ user: {
-        ...omit(user, ["password"]),
+        ...omit(user, ["password", "sentMessages"]),
         followers: user.followers.map(f => f.following),
         following: user.following.map(f => f.followed)
     } })

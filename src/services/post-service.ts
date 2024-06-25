@@ -7,6 +7,7 @@ const defaultInclude = {
             username: true,
             name: true,
             avatar: true,
+            description: true,
             followers: true,
             following: true
         },
