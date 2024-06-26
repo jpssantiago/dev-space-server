@@ -8,8 +8,11 @@ const defaultInclude = {
             name: true,
             avatar: true,
             description: true,
-            followers: true,
-            following: true
+            followers: {
+                select: {
+                    followingId: true
+                }
+            }
         },
     },
     likes: true,

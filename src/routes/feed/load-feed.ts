@@ -8,7 +8,15 @@ export async function loadFeed(_: FastifyRequest, reply: FastifyReply) {
         feed: posts?.map(post => {
             return {
                 ...post,
-                likes: post.likes.map(l => l.user)
+                likes: post.likes.map(l => l.user),
+                author: {
+                    ...post.author,
+                    followers: post.author.followers.map(f => {
+                        return {
+                            id: f.followingId
+                        }
+                    })
+                }
             }
         })
     })
