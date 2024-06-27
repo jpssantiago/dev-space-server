@@ -2,13 +2,13 @@ import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
 import * as TokenService from "../../services/token-service"
-import * as NotificationService from "../../services/notification-service"
+import * as ActivityService from "../../services/activity-service"
 
 const headersSchema = z.object({
     authorization: z.string()
 })
 
-export async function getNotifications(request: FastifyRequest, reply: FastifyReply) {
+export async function getActivities(request: FastifyRequest, reply: FastifyReply) {
     const { data: headers } = headersSchema.safeParse(request.headers)
     if (!headers) {
         return reply.send({ err: "no-token" })
@@ -24,6 +24,6 @@ export async function getNotifications(request: FastifyRequest, reply: FastifyRe
         return reply.send({ err: "unauthorized" })
     }
 
-    const notifications = await NotificationService.getNotifications(id)
-    reply.send({ notifications })
+    const activities = await ActivityService.getActivities(id)
+    reply.send({ activities })
 }

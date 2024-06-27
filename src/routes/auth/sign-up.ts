@@ -5,7 +5,6 @@ import { emailSchema, usernameSchema, passwordSchema, } from "../../schemas/auth
 import * as HashService from "../../services/hash-service"
 import * as UserService from "../../services/user-service"
 import * as TokenService from "../../services/token-service"
-import { omit } from "../../lib/utils"
 
 const bodySchema = z.object({
     email: emailSchema,

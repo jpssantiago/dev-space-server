@@ -10,11 +10,11 @@ app.register(cors, {})
 app.register(import("./routes/auth/auth"))
 app.register(import("./routes/user/user"))
 app.register(import("./routes/feed/feed"))
-app.register(import("./routes/notification/notification"))
 app.register(import("./routes/like/like"))
 app.register(import("./routes/post/post"))
 app.register(import("./routes/follow/follow"))
 app.register(import("./routes/profile/profile"))
+app.register(import("./routes/activity/activity"))
 
 app.listen({
     port: env.PORT,

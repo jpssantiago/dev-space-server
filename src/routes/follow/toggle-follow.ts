@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import * as TokenService from "../../services/token-service"
 import * as FollowService from "../../services/follow-service"
+import * as ActivityService from "../../services/activity-service"
 
 const headersSchema = z.object({
     authorization: z.string()
@@ -33,6 +34,17 @@ export async function toggleFollow(request: FastifyRequest, reply: FastifyReply)
         return reply.send({ err: "unauthorized" })
     }
 
+    if (id == params.followedId) {
+        return reply.send({ err: "cannot-follow-yourself" })
+    }
+
     const follow = await FollowService.toggleFollow(id, params.followedId)
+
+    await ActivityService.createOrDeleteActivity(
+        params.followedId, 
+        "FOLLOW",
+        id
+    )
+
     reply.send({ follow })
 }

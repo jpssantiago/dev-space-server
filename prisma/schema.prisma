@@ -30,11 +30,8 @@ model User {
   following Follow[] @relation("following")
   followers Follow[] @relation("followed")
 
-  sentNotifications Notification[] @relation("sender")
-  notifications     Notification[] @relation("receiver")
-
-  chats Chat[]
-  sentMessages Message[]
+  activities Activity[] @relation("activities")
+  sentActivities Activity[]
 }
 
 model Post {
@@ -47,11 +44,12 @@ model Post {
   authorId String
 
   likes         Like[]
-  notifications Notification[]
 
   parentPost   Post?   @relation("parentPost", fields: [parentPostId], references: [id], onDelete: Cascade)
   parentPostId String?
   replies      Post[]  @relation("parentPost")
+
+  activities Activity[]
 }
 
 model Like {
@@ -76,46 +74,24 @@ model Follow {
   followedId String
 }
 
-enum NotificationType {
+enum ActivityType {
   LIKE_POST
   LIKE_REPLY
   FOLLOW
   REPLY
 }
 
-model Notification {
-  id        String           @id @default(cuid())
-  type      NotificationType
-  createdAt DateTime         @default(now())
+model Activity {
+  id String @id @default(cuid())
+  type ActivityType
+  createdAt DateTime @default(now())
 
-  sender   User?   @relation("sender", fields: [senderId], references: [id])
-  senderId String?
+  user User @relation("activities", fields: [userId], references: [id])
+  userId String
 
-  receiver   User?   @relation("receiver", fields: [receiverId], references: [id])
-  receiverId String?
-
-  post   Post?   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post Post? @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String?
-}
 
-model Chat {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-
-  users User[]
-
-  messages Message[]
-}
-
-model Message {
-  id        String   @id @default(cuid())
-  text      String?
-  file      String?
-  createdAt DateTime @default(now())
-
-  chat Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
-  chatId String
-
-  sender   User   @relation(fields: [senderId], references: [id])
-  senderId String
+  sender User? @relation(fields: [senderId], references: [id])
+  senderId String?
 }

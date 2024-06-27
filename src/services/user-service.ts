@@ -28,7 +28,6 @@ export async function getUserById(id: string) {
         return await prisma.user.findUniqueOrThrow({
             where: { id },
             include: {
-                notifications: true,
                 followers: {
                     select: {
                         following: {
@@ -43,30 +42,6 @@ export async function getUserById(id: string) {
                         followed: {
                             select: {
                                 id: true
-                            }
-                        }
-                    }
-                },
-                chats: {
-                    include: {
-                        users: {
-                            select: {
-                                id: true,
-                                username: true,
-                                name: true,
-                                avatar: true
-                            }
-                        },
-                        messages: {
-                            include: {
-                                sender: {
-                                    select: {
-                                        id: true,
-                                        username: true,
-                                        name: true,
-                                        avatar: true
-                                    }
-                                }
                             }
                         }
                     }
