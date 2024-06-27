@@ -75,3 +75,72 @@ export async function getUserById(id: string) {
         })
     } catch {}
 }
+
+export async function getUserProfile(username: string) {
+    try {
+        return await prisma.user.findUniqueOrThrow({
+            where: { username: username },
+            select: {
+                id: true,
+                username: true,
+                name: true,
+                avatar: true,
+                description: true,
+                followers: {
+                    include: {
+                        following: {
+                            select: {
+                                id: true
+                            }
+                        }
+                    }
+                },
+                posts: {
+                    include: {
+                        author: {
+                            select: {
+                                id: true,
+                                username: true,
+                                name: true,
+                                avatar: true,
+                                description: true,
+                                followers: {
+                                    select: {
+                                        followingId: true
+                                    }
+                                }
+                            },
+                        },
+                        likes: {
+                            include: {
+                                user: {
+                                    select: {
+                                        id: true
+                                    }
+                                }
+                            }
+                        },
+                        replies: true,
+                    },
+                    orderBy: {
+                        createdAt: "desc"
+                    }
+                }
+            },
+        })
+    } catch {}
+}
+
+export async function editUser(userId: string, username: string, name: string, description?: string, avatar?: string) {
+    try {
+        return await prisma.user.update({
+            where: { id: userId },
+            data: {
+                username,
+                name,
+                description,
+                avatar
+            }
+        })
+    } catch {}
+}

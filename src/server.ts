@@ -14,6 +14,7 @@ app.register(import("./routes/notification/notification"))
 app.register(import("./routes/like/like"))
 app.register(import("./routes/post/post"))
 app.register(import("./routes/follow/follow"))
+app.register(import("./routes/profile/profile"))
 
 app.listen({
     port: env.PORT,
