@@ -4,6 +4,7 @@ import { z } from "zod"
 import * as TokenService from "../../services/token-service"
 import * as PostService from "../../services/post-service"
 import * as CloudflareService from "../../services/cloudflare-service"
+import * as ActivityService from "../../services/activity-service"
 
 const headersSchema = z.object({
     authorization: z.string()
@@ -42,6 +43,11 @@ export async function addReply(request: FastifyRequest, response: FastifyReply) 
         return response.send({ err: "unauthorized" })
     }
 
+    const post = await PostService.getPostById(params.postId)
+    if (!post) {
+        return response.send({ err: "post-not-found" })
+    }
+
     const files: string[] = []
     for (let file of body.files) {
         const key = await CloudflareService.uploadImageToBucket(id, file)
@@ -49,5 +55,15 @@ export async function addReply(request: FastifyRequest, response: FastifyReply) 
     }
 
     const reply = await PostService.addReply(id, params.postId, body.text ?? undefined, files)
+
+    if (id != post.authorId) {
+        await ActivityService.createOrDeleteActivity(
+            post.authorId, 
+            "REPLY",
+            id,
+            post.id
+        )
+    }
+
     response.send({ reply })
 }

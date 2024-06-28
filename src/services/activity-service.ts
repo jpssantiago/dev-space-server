@@ -3,6 +3,15 @@ import { prisma } from "./prisma-service"
 
 export async function getActivities(userId: string) {
     try {
+        await prisma.activity.updateMany({
+            where: {
+                userId
+            },
+            data: {
+                hasBeenRead: true
+            }
+        })
+
         return await prisma.activity.findMany({
             where: {
                 userId

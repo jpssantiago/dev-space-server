@@ -45,6 +45,12 @@ export async function getUserById(id: string) {
                             }
                         }
                     }
+                },
+                activities: {
+                    select: {
+                        id: true,
+                        hasBeenRead: true
+                    }
                 }
             },
         })

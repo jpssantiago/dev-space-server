@@ -84,6 +84,7 @@ enum ActivityType {
 model Activity {
   id String @id @default(cuid())
   type ActivityType
+  hasBeenRead Boolean @default(false)
   createdAt DateTime @default(now())
 
   user User @relation("activities", fields: [userId], references: [id])
