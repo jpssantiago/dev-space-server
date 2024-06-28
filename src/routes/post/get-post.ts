@@ -24,8 +24,16 @@ export async function getPost(request: FastifyRequest, reply: FastifyReply) {
         replies: post.replies.map(reply => {
             return {
                 ...reply,
-                likes: reply.likes.map(l => l.user)
+                likes: reply.likes.map(l => l.user),
+                author: {
+                    ...reply.author,
+                    followers: reply.author.followers.map(f => f.following)
+                }
             }
-        })
+        }),
+        author: {
+            ...post.author,
+            followers: post.author.followers.map(f => f.following)
+        }
     } })
 }

@@ -22,7 +22,16 @@ export async function getActivities(userId: string) {
                         id: true,
                         username: true,
                         name: true,
-                        avatar: true
+                        avatar: true,
+                        followers: {
+                            select: {
+                                following: {
+                                    select: {
+                                        id: true
+                                    }
+                                }
+                            }
+                        }
                     }
                 },
                 post: {

@@ -25,5 +25,13 @@ export async function getActivities(request: FastifyRequest, reply: FastifyReply
     }
 
     const activities = await ActivityService.getActivities(id)
-    reply.send({ activities })
+    reply.send({ activities: activities?.map(activity => {
+        return {
+            ...activity,
+            sender: {
+                ...activity.sender,
+                followers: activity.sender?.followers.map(f => f.following)
+            }
+        }
+    }) })
 }

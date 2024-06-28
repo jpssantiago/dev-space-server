@@ -10,7 +10,11 @@ const defaultInclude = {
             description: true,
             followers: {
                 select: {
-                    followingId: true
+                    following: {
+                        select: {
+                            id: true
+                        }
+                    }
                 }
             }
         },
@@ -65,8 +69,15 @@ export async function getPostById(postId: string) {
                                 username: true,
                                 name: true,
                                 avatar: true,
-                                followers: true,
-                                following: true
+                                followers: {
+                                    select: {
+                                        following: {
+                                            select: {
+                                                id: true
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         },
                         likes: {
