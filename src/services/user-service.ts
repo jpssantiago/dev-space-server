@@ -112,15 +112,15 @@ export async function getUserProfile(username: string) {
     } catch {}
 }
 
-export async function editUser(userId: string, username: string, name: string, description?: string, avatar?: string) {
+export async function editUser(userId: string, username: string, name: string, description: string | null, avatar: string | null) {
     try {
         return await prisma.user.update({
             where: { id: userId },
             data: {
                 username,
                 name,
-                description,
-                avatar
+                description: description,
+                avatar: avatar
             }
         })
     } catch {}

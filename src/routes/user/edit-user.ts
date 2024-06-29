@@ -12,7 +12,7 @@ const headersSchema = z.object({
 const bodySchema = z.object({
     username: usernameSchema,
     name: z.string().trim().min(1).max(50),
-    description: z.string().trim().min(1).max(150).nullable(),
+    description: z.string().trim().max(150).nullable(),
     avatar: z.string().nullable()
 })
 
@@ -46,8 +46,8 @@ export async function editUser(request: FastifyRequest, reply: FastifyReply) {
         id,
         body.username,
         body.name,
-        body.description ?? undefined, 
-        body.avatar ?? undefined
+        body.description, 
+        body.avatar
     )
 
     reply.send({ user: newUser })
