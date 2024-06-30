@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
-import * as TokenService from "../../services/token-service"
-import * as PostService from "../../services/post-service"
-import * as CloudflareService from "../../services/cloudflare-service"
+import * as TokenService from "@/services/token-service"
+import * as PostService from "@/services/post-service"
+import * as CloudflareService from "@/services/cloudflare-service"
 
 const headersSchema = z.object({
     authorization: z.string()

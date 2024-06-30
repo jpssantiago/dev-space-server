@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 
-import { env } from "../env/env"
+import { env } from "@/env/env"
 
 export async function createHash(password: string): Promise<string | undefined> {
     try {

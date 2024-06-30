@@ -1,5 +1,5 @@
-export function omit(object, arr) {
+export function omit(object: any, arr: any) {
     return Object.keys(object)
         .filter(k => !arr.includes(k))
-        .reduce((acc, key) => ((acc[key]) = object[key], acc), {})
+        .reduce((acc: any, key) => ((acc[key]) = object[key], acc), {})
 }

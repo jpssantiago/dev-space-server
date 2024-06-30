@@ -1,7 +1,7 @@
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 import { createId } from "@paralleldrive/cuid2"
 
-import { env } from "../env/env"
+import { env } from "@/env/env"
 
 export const cloudflareBucketClient = new S3Client({
     region: "us-east-1",

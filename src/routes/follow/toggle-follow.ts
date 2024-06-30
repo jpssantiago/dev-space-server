@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
-import * as TokenService from "../../services/token-service"
-import * as FollowService from "../../services/follow-service"
-import * as ActivityService from "../../services/activity-service"
+import * as TokenService from "@/services/token-service"
+import * as FollowService from "@/services/follow-service"
+import * as ActivityService from "@/services/activity-service"
 
 const headersSchema = z.object({
     authorization: z.string()

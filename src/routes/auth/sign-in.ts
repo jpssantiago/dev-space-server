@@ -1,10 +1,10 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
-import { emailOrUsernameSchema, passwordSchema } from "../../schemas/auth-schemas"
-import * as UserService from "../../services/user-service"
-import * as HashService from "../../services/hash-service"
-import * as TokenService from "../../services/token-service"
+import { emailOrUsernameSchema, passwordSchema } from "@/schemas/auth-schemas"
+import * as UserService from "@/services/user-service"
+import * as HashService from "@/services/hash-service"
+import * as TokenService from "@/services/token-service"
 
 const bodySchema = z.object({
     emailOrUsername: emailOrUsernameSchema,

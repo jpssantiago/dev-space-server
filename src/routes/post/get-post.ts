@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
-import * as PostService from "../../services/post-service"
+import * as PostService from "@/services/post-service"
 
 const paramsSchema = z.object({
     postId: z.string().cuid()

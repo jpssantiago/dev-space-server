@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken"
 
-import { env } from "../env/env"
+import { env } from "@/env/env"
 
 export function createToken(id: string): string {
     return jwt.sign({ id }, env.JWT_SECRET_KEY, { expiresIn: "7d" })

@@ -1,8 +1,8 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 import { z } from "zod"
 
-import { usernameSchema } from "../../schemas/auth-schemas"
-import * as UserService from "../../services/user-service"
+import { usernameSchema } from "@/schemas/auth-schemas"
+import * as UserService from "@/services/user-service"
 
 const paramsSchema = z.object({
     username: usernameSchema

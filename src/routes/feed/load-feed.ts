@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify"
 
-import * as PostService from "../../services/post-service"
+import * as PostService from "@/services/post-service"
 
 export async function loadFeed(_: FastifyRequest, reply: FastifyReply) {
     const posts = await PostService.getAllPosts()
@@ -13,7 +13,7 @@ export async function loadFeed(_: FastifyRequest, reply: FastifyReply) {
                     ...post.author,
                     followers: post.author.followers.map(f => {
                         return {
-                            id: f.followingId
+                            id: f.following.id
                         }
                     })
                 }
