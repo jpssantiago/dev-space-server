@@ -24,6 +24,16 @@ export async function signUp(request: FastifyRequest, reply: FastifyReply) {
         return reply.send({ err: "password-not-hashed" })
     }
 
+    const emailInUse = await UserService.getUserByEmail(body.email)
+    if (emailInUse) {
+        return reply.send({ err: "email-in-use" })
+    }
+
+    const usernameInUse = await UserService.getUserByUsername(body.username)
+    if (usernameInUse) {
+        return reply.send({ err: "username-in-use" })
+    }
+
     const user = await UserService.createUser(body.email, body.username, hash, body.name)
     if (!user) {
         return reply.send({ err: "unique-error" })

@@ -1,11 +1,31 @@
 import { prisma } from "./prisma-service"
 
 export async function getUserByEmailOrUsername(emailOrUsername: string) {
-    try {
-        const where = emailOrUsername.includes("@") ? { email: emailOrUsername } : { username: emailOrUsername }
+    return emailOrUsername.includes("@") ? getUserByEmail(emailOrUsername) : getUserByUsername(emailOrUsername)
+}
 
-        return await prisma.user.findUnique({ 
-            where: where,
+export async function getUserByUsername(username: string) {
+    try {
+        return await prisma.user.findFirst({
+            where: {
+                username: {
+                    equals: username,
+                    mode: "insensitive"
+                }
+            }
+        })
+    } catch {}
+}
+
+export async function getUserByEmail(email: string) {
+    try {
+        return await prisma.user.findFirst({
+            where: {
+                email: {
+                    equals: email,
+                    mode: "insensitive"
+                }
+            }
         })
     } catch {}
 }
@@ -59,8 +79,13 @@ export async function getUserById(id: string) {
 
 export async function getUserProfile(username: string) {
     try {
-        return await prisma.user.findUniqueOrThrow({
-            where: { username: username },
+        return await prisma.user.findFirst({
+            where: { 
+                username: {
+                    equals: username,
+                    mode: "insensitive"
+                }
+             },
             select: {
                 id: true,
                 username: true,
